@@ -15,6 +15,11 @@ class LRUCache
   end
 
   def get(key)
+    if @map[key].nil?
+      # @store[key]
+    else
+      return @map[key].val
+    end
   end
 
   def to_s
@@ -32,5 +37,6 @@ class LRUCache
   end
 
   def eject!
+    @store.first.delete(-1)
   end
 end

@@ -30,12 +30,18 @@ class HashMap
 
   def delete(key)
 
+    @count -=1
   end
 
   def each
-    each do |bucket|
+    # @store.each do |bucket|
+    #   bucket.each do |link|
+    #     yield link
+    #   end
+    # end
+    @store.each do |bucket|
       bucket.each do |link|
-        yield link
+        yield [link.key, link.val]
       end
     end
   end
