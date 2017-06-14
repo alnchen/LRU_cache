@@ -11,7 +11,7 @@ class HashSet
   def insert(key)
     self[key.hash] << key
     @count += 1
-    self.resize! if count > num_buckets
+    resize! if count > num_buckets
   end
 
   def include?(key)
@@ -33,5 +33,13 @@ class HashSet
   end
 
   def resize!
+    cur_store = @store
+    @count = 0
+    @store = Array.new(num_buckets * 2){[]}
+    cur_store.each do |bucket|
+      bucket.each do |num|
+        insert(num)
+      end
+    end
   end
 end
