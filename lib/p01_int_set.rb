@@ -14,7 +14,7 @@ class MaxIntSet
     raise 'Out of bounds' if num < 0 || num >= @store.length
     return nil unless include?(num)
     @store[num] = false
-    num
+    # num
   end
 
   def include?(num)
@@ -40,18 +40,22 @@ class IntSet
   end
 
   def insert(num)
+    self[num].push(num)
   end
 
   def remove(num)
+    self[num].delete(num)
   end
 
   def include?(num)
+    return true if self[num].include?(num)
+    false
   end
 
   private
 
   def [](num)
-    # optional but useful; return the bucket corresponding to `num`
+    @store[num % num_buckets]
   end
 
   def num_buckets
@@ -68,18 +72,23 @@ class ResizingIntSet
   end
 
   def insert(num)
+    self[num] << num
+    @count += 1
+    resize! if @count > num_buckets
   end
 
   def remove(num)
+    self[num].delete(num)
   end
 
   def include?(num)
+    self[num].include?(num)
   end
 
   private
 
   def [](num)
-    # optional but useful; return the bucket corresponding to `num`
+    @store[num % num_buckets]
   end
 
   def num_buckets
@@ -87,5 +96,14 @@ class ResizingIntSet
   end
 
   def resize!
+    cur_store = @store
+    @count = 0
+    @store = Array.new(num_buckets * 2){[]}
+    cur_store.each do |bucket|
+      bucket.each do |num|
+        insert(num)
+      end
+    end
+
   end
 end
