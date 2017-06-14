@@ -10,18 +10,34 @@ class HashMap
   end
 
   def include?(key)
+    @store[key.hash % num_buckets].include?(key)
   end
 
   def set(key, val)
+    resize! if @count == num_buckets
+
+    if include?(key)
+      @store[key.hash % num_buckets].update(key, val)
+    else
+      @store[key.hash % num_buckets].append(key, val)
+      @count += 1
+    end
   end
 
   def get(key)
+    @store[key.hash % num_buckets].get(key)
   end
 
   def delete(key)
+
   end
 
   def each
+    each do |bucket|
+      bucket.each do |link|
+        yield link
+      end
+    end
   end
 
   # uncomment when you have Enumerable included
@@ -42,6 +58,13 @@ class HashMap
   end
 
   def resize!
+    cur_store = @store
+    new_store = Array.new(num_buckets * 2) { LinkedList.new }
+    @store = new_store
+    @count = 0
+    cur_store.each do |bucket|
+      bucket.each { |link| set(link.key, link.val)}
+    end
   end
 
   def bucket(key)
