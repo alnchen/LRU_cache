@@ -29,7 +29,7 @@ class HashMap
   end
 
   def delete(key)
-
+    @store[key.hash % num_buckets].remove(key)
     @count -=1
   end
 
