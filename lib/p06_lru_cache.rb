@@ -35,7 +35,6 @@ class LRUCache
     val = @prc.call(key)
     new_link = @store.append(key, val)
     @map[key] = new_link
-
     eject! if count > @max
     val
   end
